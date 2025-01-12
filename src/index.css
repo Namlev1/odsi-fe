@@ -3,3 +3,7 @@
   font-size: 20px;
   font-weight: 400;
 }
+
+button{
+  font-size: inherit;
+}
