@@ -1,22 +1,27 @@
-import { useState } from 'react';
-import './LoginPage.css';
+import { useState } from 'react'
+import './LoginPage.css'
 import { request, setAuthToken } from '../../api/axios_helper.js'
+import { useNavigate } from 'react-router-dom'
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState(false)
+  const navigate = useNavigate()
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
+    // todo remove exception in logs
     request('POST', '/login', {
       username: username,
       password: password
     })
       .then(response => {
-        setAuthToken(response.data.token) 
+        setAuthToken(response.data.token)
+        navigate('/')
       })
-      .catch(error => console.log('Login failed. ' + error))
-  };
+      .catch(() => setError(true))
+  }
 
   return (
     <>
@@ -27,19 +32,30 @@ const LoginPage = () => {
           name="username"
           placeholder="Username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            setUsername(e.target.value)
+            setError(false)
+          }}
         />
         <input
           type="password"
           name="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value)
+            setError(false)
+          }
+          }
         />
         <button type="submit">Sign in</button>
       </form>
+      {error &&
+        <p className={'error'}>
+          Invalid credentials
+        </p>}
     </>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

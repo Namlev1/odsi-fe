@@ -11,9 +11,13 @@ export const setAuthToken = (token) => {
   return window.localStorage.setItem("auth_token", token)
 }
 
+export const isAuthenticated = () => {
+  return getAuthToken() !== null && getAuthToken() !== "null";
+}
+
 export const request = (method, url, data) => {
   let headers = {};
-  if (getAuthToken() !== null && getAuthToken() !== "null"){
+  if (isAuthenticated()){
     headers = {"Authorization": `Bearer ${getAuthToken()}`}
   }
   

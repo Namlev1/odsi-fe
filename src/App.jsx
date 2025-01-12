@@ -1,6 +1,4 @@
 import './App.css'
-import HomePage from './assets/HomePage.jsx'
-import LoginPage from './assets/loginPage/LoginPage.jsx'
 
 function App() {
   return (
@@ -8,8 +6,6 @@ function App() {
       <p>
         Welcome!
       </p>
-      <HomePage/>
-      <LoginPage/>
     </>
   )
 }
