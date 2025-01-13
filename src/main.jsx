@@ -4,11 +4,14 @@ import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import LoginPage from './assets/loginPage/LoginPage.jsx'
 import HomePage from './assets/HomePage.jsx'
+import PrivateRoute from './assets/privateRoute/PrivateRoute.jsx'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />
+    element: <PrivateRoute>
+      <HomePage />
+    </PrivateRoute>
   },
   {
     path: '/login',

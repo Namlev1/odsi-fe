@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { isAuthenticated, request } from '../api/axios_helper.js'
-import { Navigate } from 'react-router-dom'
+import { request } from '../api/axios_helper.js'
 
 function HomePage(props) {
   const [posts, setPosts] = useState([])
@@ -11,10 +10,6 @@ function HomePage(props) {
       })
   }, [])
   
-  if(!isAuthenticated()){
-    return <Navigate to={'/login'}/>
-  }
-
   return <>
     <p>Home page</p>
     {posts.length !== 0 && posts.map(post => <p>{post.title}</p>)}
