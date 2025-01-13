@@ -1,31 +1,38 @@
 import { useState } from 'react'
-import './LoginPage.css'
-import { request, setAuthToken } from '../../api/axios_helper.js'
 import { useNavigate } from 'react-router-dom'
+import { request, setAuthToken } from '../../api/axios_helper.js'
 
-const LoginPage = () => {
+const Registration = (props) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    // todo remove exception in logs
-    request('POST', '/login', {
+    // // todo remove exception in logs
+    request('POST', '/api/registration', {
       username: username,
       password: password
     })
       .then(response => {
-        setAuthToken(response.data.token)
-        navigate('/')
+        // After successful registration, log in the user
+        request('POST', '/login', {
+          username: username,
+          password: password
+        })
+          .then(response => {
+            setAuthToken(response.data.token)
+            navigate('/')
+          })
+          .catch((e) => navigate('/login'))
       })
-      .catch(() => setError(true))
+      .catch((e) => setErrorMessage(e.response.data))
   }
 
   return (
     <>
-      <h1>Please sign in</h1>
+      <h1>Please register</h1>
       <form onSubmit={handleSubmit} className="login-form">
         <input
           type="text"
@@ -34,7 +41,7 @@ const LoginPage = () => {
           value={username}
           onChange={(e) => {
             setUsername(e.target.value)
-            setError(false)
+            setErrorMessage('')
           }}
         />
         <input
@@ -44,19 +51,18 @@ const LoginPage = () => {
           value={password}
           onChange={(e) => {
             setPassword(e.target.value)
-            setError(false)
+            setErrorMessage('')
           }
           }
         />
-        <button type="submit">Sign in</button>
-        <button onClick={() => navigate('/register')}>Or register</button>
+        <button type="submit">Register</button>
       </form>
-      {error &&
+      {errorMessage &&
         <p className={'error'}>
-          Invalid credentials
+          {errorMessage}
         </p>}
     </>
   )
 }
 
-export default LoginPage
+export default Registration

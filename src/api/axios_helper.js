@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 
 axios.defaults.baseURL='http://localhost:8080'
 axios.defaults.headers.post["Content-Type"] = 'application/json'
@@ -9,6 +9,10 @@ export const getAuthToken = () => {
 
 export const setAuthToken = (token) => {
   return window.localStorage.setItem("auth_token", token)
+}
+
+export const removeAuthToken = () => {
+  return window.localStorage.removeItem('auth_token')
 }
 
 export const isAuthenticated = () => {
