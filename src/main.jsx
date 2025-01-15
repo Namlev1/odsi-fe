@@ -6,6 +6,7 @@ import LoginPage from './assets/loginPage/LoginPage.jsx'
 import HomePage from './assets/HomePage.jsx'
 import PrivateRoute from './assets/privateRoute/PrivateRoute.jsx'
 import Registration from './assets/registration/Registration.jsx'
+import CreatePost from './assets/createPost/CreatePost.jsx'
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,12 @@ const router = createBrowserRouter([
   {
     path: '/register',
     element: <Registration />
+  },
+  {
+    path: '/create',
+    element: <PrivateRoute>
+      <CreatePost />
+    </PrivateRoute>
   }
 ])
 
