@@ -1,5 +1,6 @@
 import { removeAuthToken, request } from '../../api/axios_helper.js'
 import { useNavigate } from 'react-router-dom'
+import './Header.module.css'
 
 const Header = () => {
   const navigate = useNavigate()
@@ -15,10 +16,10 @@ const Header = () => {
       console.log(e)
     }
   }
-  return <div>
-    <span className={'flex-grow'}></span>
+  return <header>
+    <button onClick={() => navigate('/create')}>Create new post</button>
     <button onClick={handleLogout}>Log out</button>
-  </div>
+  </header>
 }
 
 export default Header

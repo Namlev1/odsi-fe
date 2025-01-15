@@ -11,3 +11,7 @@ button{
 .error{
   color: red;
 }
+
+.flex-grow {
+  flex-grow: 1;
+}
