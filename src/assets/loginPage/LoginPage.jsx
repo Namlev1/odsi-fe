@@ -2,61 +2,78 @@ import { useState } from 'react'
 import './LoginPage.css'
 import { request, setAuthToken } from '../../api/axios_helper.js'
 import { useNavigate } from 'react-router-dom'
+import TfaForm from './TfaForm.jsx'
+import LoginForm from './LoginForm.jsx'
 
 const LoginPage = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [tfaCode, setTfaCode] = useState('')
+  const [showTfa, setShowTfa] = useState(false)
   const [error, setError] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = (event) => {
+  const handleCredentialsSubmit = async (event) => {
     event.preventDefault()
-    // todo remove exception in logs
-    request('POST', '/login', {
-      username: username,
-      password: password
-    })
-      .then(response => {
-        setAuthToken(response.data.token)
-        navigate('/')
+    try {
+      const response = await request('POST', '/login', { username, password })
+      setShowTfa(true)
+    } catch {
+      setError(true)
+    }
+  }
+
+  const handleTfaCodeSubmit = async (event) => {
+    event.preventDefault()
+    try {
+      const response = await request('POST', '/login', {
+        username,
+        password,
+        tfaCode
       })
-      .catch(() => setError(true))
+      setAuthToken(response.data.token)
+      navigate('/')
+    } catch (e) {
+      setError(e.response.data.message)
+    }
+  }
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value)
+    setError(false)
+  }
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value)
+    setError(false)
+  }
+
+  const handleTfaCodeChange = (e) => {
+    setTfaCode(e.target.value)
+    setError(false)
   }
 
   return (
     <>
-      <h1>Please sign in</h1>
-      <form onSubmit={handleSubmit} className="login-form">
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => {
-            setUsername(e.target.value)
-            setError(false)
-          }}
+      {showTfa ? (
+        <TfaForm
+          handleSubmit={handleTfaCodeSubmit}
+          tfaCode={tfaCode}
+          handleTfaCodeChange={handleTfaCodeChange}
+          error={error}
         />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value)
-            setError(false)
-          }
-          }
+      ) : (
+        <LoginForm
+          handleSubmit={handleCredentialsSubmit}
+          username={username}
+          handleUsernameChange={handleUsernameChange}
+          password={password}
+          handlePasswordChange={handlePasswordChange}
+          error={error}
         />
-        <button type="submit">Sign in</button>
-        <button onClick={() => navigate('/register')}>Or register</button>
-      </form>
-      {error &&
-        <p className={'error'}>
-          Invalid credentials
-        </p>}
+      )}
     </>
-  )
-}
+  );
+};
 
 export default LoginPage
