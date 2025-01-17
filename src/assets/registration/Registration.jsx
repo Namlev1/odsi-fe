@@ -1,68 +1,68 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { request, setAuthToken } from '../../api/axios_helper.js'
+import { request } from '../../api/axios_helper.js'
+import RegistrationForm from './RegistrationForm.jsx'
+import QrForm from './QrForm.jsx'
 
-const Registration = (props) => {
+const Registration = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [tfaCode, setTfaCode] = useState('')
+  const [qrUrl, setQrUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
 
-  const handleSubmit = (event) => {
+  const handleCredentialsSubmit = async (event) => {
     event.preventDefault()
-    // // todo remove exception in logs
-    request('POST', '/api/registration', {
-      username: username,
-      password: password
-    })
-      .then(response => {
-        // After successful registration, log in the user
-        request('POST', '/login', {
-          username: username,
-          password: password
-        })
-          .then(response => {
-            setAuthToken(response.data.token)
-            navigate('/')
-          })
-          .catch((e) => navigate('/login'))
+    try {
+      const response = await request('POST', '/api/registration', {
+        username,
+        password
       })
-      .catch((e) => setErrorMessage(e.response.data))
+      setQrUrl(response.data.qrUrl)
+      setErrorMessage('')
+    } catch (e) {
+      setErrorMessage(e.response.data)
+    }
+  }
+
+  const handleTfaCodeSubmit = async (event) => {
+    event.preventDefault()
+    try {
+      await request('POST', '/login', {
+        username,
+        password,
+        tfaCode
+      })
+      navigate('/')
+    } catch (e) {
+      setErrorMessage(e.response.data)
+    }
   }
 
   return (
     <>
-      <h1>Please register</h1>
-      <form onSubmit={handleSubmit} className="login-form">
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => {
-            setUsername(e.target.value)
-            setErrorMessage('')
-          }}
+      {qrUrl ? (
+        <QrForm
+          qrUrl={qrUrl}
+          tfaCode={tfaCode}
+          setTfaCode={setTfaCode}
+          errorMessage={errorMessage}
+          handleSubmit={handleTfaCodeSubmit}
         />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => {
-            setPassword(e.target.value)
-            setErrorMessage('')
-          }
-          }
+      ) : (
+        <RegistrationForm
+          handleSubmit={handleCredentialsSubmit}
+          setUsername={setUsername}
+          setErrorMessage={setErrorMessage}
+          setPassword={setPassword}
+          errorMessage={errorMessage}
+          username={username}
+          password={password}
         />
-        <button type="submit">Register</button>
-      </form>
-      {errorMessage &&
-        <p className={'error'}>
-          {errorMessage}
-        </p>}
+      )}
     </>
-  )
-}
+  );
+};
 
 export default Registration
