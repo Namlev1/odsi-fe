@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { request } from '../../api/axios_helper.js'
+import { request, setAuthToken } from '../../api/axios_helper.js'
 import RegistrationForm from './RegistrationForm.jsx'
 import QrForm from './QrForm.jsx'
 
@@ -29,14 +29,15 @@ const Registration = () => {
   const handleTfaCodeSubmit = async (event) => {
     event.preventDefault()
     try {
-      await request('POST', '/login', {
+      const response = await request('POST', '/login', {
         username,
         password,
         tfaCode
       })
+      setAuthToken(response.data.token)
       navigate('/')
     } catch (e) {
-      setErrorMessage(e.response.data)
+      setErrorMessage(e.response.data.message)
     }
   }
 
