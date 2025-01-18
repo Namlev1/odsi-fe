@@ -7,6 +7,7 @@ import HomePage from './assets/HomePage.jsx'
 import PrivateRoute from './assets/privateRoute/PrivateRoute.jsx'
 import Registration from './assets/registration/Registration.jsx'
 import CreatePost from './assets/createPost/CreatePost.jsx'
+import Profile from './assets/Profile/Profile.jsx'
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,12 @@ const router = createBrowserRouter([
     path: '/create',
     element: <PrivateRoute>
       <CreatePost />
+    </PrivateRoute>
+  },
+  {
+    path: '/profile',
+    element: <PrivateRoute>
+      <Profile />
     </PrivateRoute>
   }
 ])

@@ -18,6 +18,7 @@ const Header = () => {
   }
   return <header>
     <button onClick={() => navigate('/create')}>Create new post</button>
+    <button onClick={() => navigate('/profile')}>Profile</button>
     <button onClick={handleLogout}>Log out</button>
   </header>
 }

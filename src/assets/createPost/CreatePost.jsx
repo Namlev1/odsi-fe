@@ -37,7 +37,6 @@ const CreatePost = () => {
     const encoder = new TextEncoder()
     const encodedContent = encoder.encode(content)
     const binaryKey = convertPEMToBinary(key)
-    console.log('Binary Key:', binaryKey)
 
     const importedKey = await window.crypto.subtle.importKey(
       'pkcs8',
