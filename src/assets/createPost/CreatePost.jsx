@@ -78,7 +78,8 @@ const CreatePost = () => {
   return (
     <>
       <Header />
-      <div>
+      <h1>Create new post</h1>
+      <div className={'new-post'}>
         <Editor value={editorValue} onValueChange={setEditorValue} title={title} onTitleChange={setTitle} />
         <div>
           <label>

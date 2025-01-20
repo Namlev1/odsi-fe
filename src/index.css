@@ -6,6 +6,15 @@
 
 button{
   font-size: inherit;
+  background-color: lightgreen;
+  border-radius: 8px;
+  padding: .4rem .8rem;
+  transition: background-color 200ms ease-in;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: darkgreen;
 }
 
 .error{
@@ -14,4 +23,45 @@ button{
 
 .flex-grow {
   flex-grow: 1;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  max-width: 1920px;
+}
+
+#root {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.posts {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.post-card {
+  width: 800px;
+  border: 2px solid darkgreen;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+
+.separator {
+  width: 100%;
+  background-color: darkgreen;
+  height: 2px;
+}
+
+.new-post {
+  width: 1280px;
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { request } from '../api/axios_helper.js'
-import Header from './header/Header.jsx'
+import { request } from '../../api/axios_helper.js'
+import Header from '../header/Header.jsx'
 import DOMPurify from 'quill/formats/link.js'
 
 function HomePage(props) {
@@ -21,12 +21,13 @@ function HomePage(props) {
   }
 
   const printPost = (post) => {
-    const title = sanitizeContent(post.title)
     const content = sanitizeContent(post.content)
     return (
-      <div key={post.id}>
+      <div key={post.id} className={'post-card'}>
         <h2>{post.title}</h2>
+        <span className={'separator'}></span>
         <p dangerouslySetInnerHTML={{ __html: content }}></p>
+        <span className={'separator'}></span>
         <p>By {post.username}</p>
       </div>
     )
@@ -34,8 +35,10 @@ function HomePage(props) {
 
   return <>
     <Header />
-    <p>Home page</p>
-    {posts.length !== 0 && posts.map(printPost)}
+    <h1>Home page</h1>
+    <div className={'posts'}>
+      {posts.length !== 0 && posts.map(printPost)}
+    </div>
   </>
 }
 
