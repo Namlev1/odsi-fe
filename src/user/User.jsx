@@ -1,20 +1,43 @@
+import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { request } from '../../api/axios_helper.js'
-import Header from '../header/Header.jsx'
+import { request } from '../api/axios_helper.js'
+import Header from '../assets/header/Header.jsx'
 import DOMPurify from 'quill/formats/link.js'
-import { mdiCheckDecagram } from '@mdi/js'
 import Icon from '@mdi/react'
-import { Link, useNavigate } from 'react-router-dom'
+import { mdiCheckDecagram } from '@mdi/js'
 
-function HomePage(props) {
+const User = () => {
+  const { username } = useParams()
+
+  const [user, setUser] = useState(null)
   const [posts, setPosts] = useState([])
-  const navigate = useNavigate()
 
   useEffect(() => {
-    request('GET', '/api/post/all', {})
-      .then((response) => {
+    const fetchUser = async () => {
+      try {
+        const response = await request(
+          'GET',
+          `/api/v1/user/${username}`
+        )
+        setUser(response.data)
+      } catch (e) {
+        console.error('Error while fetching post: ' + e)
+      }
+    }
+
+    const fetchPosts = async () => {
+      try {
+        const response = await request(
+          'GET',
+          `/api/post/user/${username}`
+        )
         setPosts(response.data)
-      })
+      } catch (e) {
+        console.error('Error while fetching user: ', e)
+      }
+    }
+    fetchUser()
+    fetchPosts()
   }, [])
 
   const sanitizeContent = (content) => {
@@ -27,7 +50,6 @@ function HomePage(props) {
 
   const printPost = (post) => {
     const content = sanitizeContent(post.content)
-    const postUrl = '/post/' + post.id
     return (
       <div key={post.id} className={'post-card'}>
         <div className={'flex-row'}>
@@ -36,20 +58,33 @@ function HomePage(props) {
         </div>
         <span className={'separator'}></span>
         <p dangerouslySetInnerHTML={{ __html: content }}></p>
-        <span className={'separator'}></span>
-        <p>By <Link to={`/user/${post.username}`}>{post.username}</Link></p>
-        <button onClick={() => navigate(postUrl, { state: { post } })}>Details</button>
       </div>
     )
   }
+  console.log(user)
 
   return <>
     <Header />
-    <h1>Home page</h1>
+    <h1>{username} profile</h1>
+    <h2>Public key:</h2>
+    {(user && user.pubKey) ?
+      <>
+        <p>
+          <pre>{user.pubKey}</pre>
+        </p>
+      </>
+      :
+      <div>
+        <p>
+          This user doesn&#39;t have a public key.
+        </p>
+      </div>
+    }
+    <h2>Posts:</h2>
     <div className={'posts'}>
       {posts.length !== 0 && posts.map(printPost)}
     </div>
   </>
 }
 
-export default HomePage
+export default User

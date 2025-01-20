@@ -9,6 +9,7 @@ import Registration from './assets/registration/Registration.jsx'
 import CreatePost from './assets/createPost/CreatePost.jsx'
 import Profile from './assets/Profile/Profile.jsx'
 import Post from './assets/Post.jsx'
+import User from './user/User.jsx'
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,12 @@ const router = createBrowserRouter([
     path: '/profile',
     element: <PrivateRoute>
       <Profile />
+    </PrivateRoute>
+  },
+  {
+    path: '/user/:username',
+    element: <PrivateRoute>
+      <User />
     </PrivateRoute>
   },
   {
