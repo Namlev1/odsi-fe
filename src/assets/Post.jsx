@@ -1,20 +1,28 @@
-import { useEffect, useState } from 'react'
-import { request } from '../../api/axios_helper.js'
-import Header from '../header/Header.jsx'
-import DOMPurify from 'quill/formats/link.js'
-import { mdiCheckDecagram } from '@mdi/js'
+import { useParams } from 'react-router-dom'
+import Header from './header/Header.jsx'
 import Icon from '@mdi/react'
-import { useNavigate } from 'react-router-dom'
+import { mdiCheckDecagram } from '@mdi/js'
+import DOMPurify from 'quill/formats/link.js'
+import { useEffect, useState } from 'react'
+import { request } from '../api/axios_helper.js'
 
-function HomePage(props) {
-  const [posts, setPosts] = useState([])
-  const navigate = useNavigate()
-  
+const Post = (props) => {
+  const { id } = useParams()
+  const [post, setPost] = useState(null)
+
   useEffect(() => {
-    request('GET', '/api/post/all', {})
-      .then((response) => {
-        setPosts(response.data)
-      })
+    const fetchPost = async () => {
+      try {
+        const response = await request(
+          'GET',
+          `/api/post/${id}`
+        )
+        setPost(response.data)
+      } catch (e) {
+        console.error('Error while fetching post: ' + e)
+      }
+    }
+    fetchPost()
   }, [])
 
   const sanitizeContent = (content) => {
@@ -26,10 +34,12 @@ function HomePage(props) {
   }
 
   const printPost = (post) => {
+    if (!post) {
+      return
+    }
     const content = sanitizeContent(post.content)
-    const postUrl = '/post/' + post.id
     return (
-      <div key={post.id} className={'post-card'}>
+      <div key={post.id} className={'post-details'}>
         <div className={'flex-row'}>
           <h2>{post.title}</h2>
           {post.signature && <Icon path={mdiCheckDecagram} size={1} color={'green'} />}
@@ -38,18 +48,21 @@ function HomePage(props) {
         <p dangerouslySetInnerHTML={{ __html: content }}></p>
         <span className={'separator'}></span>
         <p>By {post.username}</p>
-        <button onClick={() => navigate(postUrl, { state: { post } })}>Details</button>
+        {post.signature && <>
+          <span className={'separator'}></span>
+          <h3>Signature</h3>
+          <p>{post.signature}</p>
+        </>
+        }
       </div>
     )
   }
 
   return <>
     <Header />
-    <h1>Home page</h1>
-    <div className={'posts'}>
-      {posts.length !== 0 && posts.map(printPost)}
-    </div>
+    <h1>Post details:</h1>
+    {printPost(post)}
   </>
 }
 
-export default HomePage
+export default Post
