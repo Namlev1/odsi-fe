@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import Header from './header/Header.jsx'
 import Icon from '@mdi/react'
 import { mdiCheckDecagram } from '@mdi/js'
@@ -9,6 +9,19 @@ import { request } from '../api/axios_helper.js'
 const Post = (props) => {
   const { id } = useParams()
   const [post, setPost] = useState(null)
+  const [isSigCorrect, setIsSigCorrect] = useState(null)
+
+  const confirmSignature = async () => {
+    try {
+      const response = await request(
+        'GET',
+        `/api/post/${id}/signature`
+      )
+      setIsSigCorrect(response.data)
+    } catch (e) {
+      console.error('Error while confirming the signature: ' + e)
+    }
+  }
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -47,11 +60,16 @@ const Post = (props) => {
         <span className={'separator'}></span>
         <p dangerouslySetInnerHTML={{ __html: content }}></p>
         <span className={'separator'}></span>
-        <p>By {post.username}</p>
+        <p>By <Link to={`/user/${post.username}`}>{post.username}</Link></p>
         {post.signature && <>
           <span className={'separator'}></span>
           <h3>Signature</h3>
           <p>{post.signature}</p>
+          <button onClick={confirmSignature}>Confirm signature</button>
+          {isSigCorrect !== null && (
+            <p
+              className={isSigCorrect ? '' : 'error'}>{isSigCorrect ? 'Signature is correct' : 'Signature is incorrect'}</p>
+          )}
         </>
         }
       </div>
