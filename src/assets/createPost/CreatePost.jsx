@@ -6,7 +6,6 @@ import { request } from '../../api/axios_helper.js'
 import { useNavigate } from 'react-router-dom'
 import { Buffer } from 'buffer'
 
-// TODO kiedy wybrano "sign post", należy poprawić UX i validację.
 const CreatePost = () => {
   const [editorValue, setEditorValue] = useState('')
   const [title, setTitle] = useState('')
