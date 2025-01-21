@@ -10,6 +10,7 @@ import CreatePost from './assets/createPost/CreatePost.jsx'
 import Profile from './assets/Profile/Profile.jsx'
 import Post from './assets/Post.jsx'
 import User from './user/User.jsx'
+import ChangePassword from './assets/ChangePassword.jsx'
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,12 @@ const router = createBrowserRouter([
     path: '/post/:id',
     element: <PrivateRoute>
       <Post />
+    </PrivateRoute>
+  },
+  {
+    path: '/password',
+    element: <PrivateRoute>
+      <ChangePassword />
     </PrivateRoute>
   }
 ])

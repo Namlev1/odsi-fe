@@ -101,3 +101,7 @@ body {
   align-items: center;
   gap: 1rem;
 }
+
+.change-password > div > * {
+    width: 97%;
+}

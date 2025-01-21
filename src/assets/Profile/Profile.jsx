@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react'
 import { request } from '../../api/axios_helper.js'
 import DOMPurify from 'quill/formats/link.js'
 import Header from '../header/Header.jsx'
+import { useNavigate } from 'react-router-dom'
 
 const Profile = () => {
   const [pubKey, setPubKey] = useState('')
   const [newPubKey, setNewPubKey] = useState('')
   const [error, setError] = useState('')
   const [posts, setPosts] = useState([])
+  const navigate = useNavigate()
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]
@@ -84,6 +86,7 @@ const Profile = () => {
       <Header />
       <div className={'profile'}>
         <h1>Your profile</h1>
+        <button onClick={() => navigate('/password')}>Change password</button>
         <h2>Public key:</h2>
         {pubKey ?
           <>
