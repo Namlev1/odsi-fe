@@ -3,8 +3,6 @@ import 'react-quill/dist/quill.snow.css'
 
 const ReactQuill = lazy(() => import('react-quill'))
 
-// validation: title < 100, content < 5000
-
 export const Editor = ({ value, onValueChange, title, onTitleChange, titleError, valueError }) => {
   const quillRef = useRef(null)
   const modules = useMemo(
@@ -12,6 +10,7 @@ export const Editor = ({ value, onValueChange, title, onTitleChange, titleError,
       toolbar: {
         container: [
           [{ header: [1, 2, 3, false] }],
+          ['bold', 'underline'],
           ['image']
         ],
         handlers: {
@@ -20,7 +19,7 @@ export const Editor = ({ value, onValueChange, title, onTitleChange, titleError,
       }
     }),
     []
-  )
+  );
 
   function imageHandler() {
     if (!quillRef.current) return

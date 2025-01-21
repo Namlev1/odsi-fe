@@ -37,6 +37,7 @@ const CreatePost = () => {
   }
 
   const handleValueChange = (e) => {
+    console.log(e)
     const newValue = e
     setEditorValue(newValue)
     if (newValue.length < 1 || newValue.length >= 5000) {
