@@ -20,7 +20,7 @@ const LoginPage = () => {
     try {
       const response = await request('POST', '/login', { username, password })
       setShowTfa(true)
-    } catch {
+    } catch (e) {
       setError(true)
     }
   }

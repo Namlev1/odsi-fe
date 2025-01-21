@@ -87,9 +87,7 @@ const Profile = () => {
         <h2>Public key:</h2>
         {pubKey ?
           <>
-            <p>
               <pre>{pubKey}</pre>
-            </p>
           </>
           :
           <div>

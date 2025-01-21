@@ -69,9 +69,7 @@ const User = () => {
     <h2>Public key:</h2>
     {(user && user.pubKey) ?
       <>
-        <p>
           <pre>{user.pubKey}</pre>
-        </p>
       </>
       :
       <div>
