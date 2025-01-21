@@ -3,7 +3,9 @@ import 'react-quill/dist/quill.snow.css'
 
 const ReactQuill = lazy(() => import('react-quill'))
 
-export const Editor = ({ value, onValueChange, title, onTitleChange }) => {
+// validation: title < 100, content < 5000
+
+export const Editor = ({ value, onValueChange, title, onTitleChange, titleError, valueError }) => {
   const quillRef = useRef(null)
   const modules = useMemo(
     () => ({
@@ -38,13 +40,13 @@ export const Editor = ({ value, onValueChange, title, onTitleChange }) => {
         type="text"
         placeholder="Enter title"
         value={title}
-        onChange={(e) => onTitleChange(e.target.value)}
+        onChange={(e) => onTitleChange(e)}
         style={{
           width: '100%',
           padding: '8px',
           marginBottom: '10px',
           fontSize: '16px',
-          border: '1px solid #ccc',
+          border: `1px solid ${titleError ? 'red' : '#ccc'}`,
           borderRadius: '4px'
         }}
       />
@@ -55,6 +57,9 @@ export const Editor = ({ value, onValueChange, title, onTitleChange }) => {
           defaultValue={value}
           onChange={onValueChange}
           modules={modules}
+          style={{
+            border: `2px solid ${valueError ? 'red' : '#ccc'}`
+          }}
         />
       </Suspense>
     </div>

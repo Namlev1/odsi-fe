@@ -6,9 +6,12 @@ import { request } from '../../api/axios_helper.js'
 import { useNavigate } from 'react-router-dom'
 import { Buffer } from 'buffer'
 
+// TODO kiedy wybrano "sign post", należy poprawić UX i validację.
 const CreatePost = () => {
   const [editorValue, setEditorValue] = useState('')
   const [title, setTitle] = useState('')
+  const [titleError, setTitleError] = useState(false)
+  const [valueError, setValueError] = useState(false)
   const [error, setError] = useState('')
   const [signPost, setSignPost] = useState(false)
   const [privateKey, setPrivateKey] = useState('')
@@ -21,6 +24,28 @@ const CreatePost = () => {
     reader.onload = () => setPrivateKey(reader.result)
     reader.onerror = () => setError('Error reading the private key file.')
     reader.readAsText(file)
+  }
+
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value
+    setTitle(newTitle)
+    if (newTitle.length < 1 || newTitle.length >= 100) {
+      setTitleError(true)
+    } else {
+      setTitleError(false)
+    }
+    setError('')
+  }
+
+  const handleValueChange = (e) => {
+    const newValue = e
+    setEditorValue(newValue)
+    if (newValue.length < 1 || newValue.length >= 5000) {
+      setValueError(true)
+    } else {
+      setValueError(false)
+    }
+    setError('')
   }
 
   const convertPEMToBinary = (pem) => {
@@ -66,11 +91,9 @@ const CreatePost = () => {
       })
         .then(() => navigate('/'))
         .catch(e => {
-          console.log(e)
           setError(e.response?.data || 'An error occurred')
         })
     } catch (e) {
-      console.log(e)
       setError('Error signing the post.')
     }
   }
@@ -80,7 +103,8 @@ const CreatePost = () => {
       <Header />
       <h1>Create new post</h1>
       <div className={'new-post'}>
-        <Editor value={editorValue} onValueChange={setEditorValue} title={title} onTitleChange={setTitle} />
+        <Editor value={editorValue} onValueChange={handleValueChange} title={title} onTitleChange={handleTitleChange}
+                titleError={titleError} valueError={valueError} />
         <div>
           <label>
             <input
@@ -98,7 +122,7 @@ const CreatePost = () => {
           )}
         </div>
       </div>
-      <button onClick={onPostSubmit}>Submit</button>
+      <button onClick={onPostSubmit} disabled={titleError || valueError}>Submit</button>
       {error && <p className={'error'}>{error}</p>}
     </>
   )
