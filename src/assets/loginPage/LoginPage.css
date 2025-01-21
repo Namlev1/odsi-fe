@@ -1,10 +1,24 @@
 .login-form{
-    display: grid;
-    grid-template-rows: repeat(3, 30px);
+    display: flex;
+    flex-direction: column;
     max-width: 300px;
     gap: 1rem;
 }
 
-.login-form button{
-    background-color: lightgreen;
+.login-form div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+
+}
+
+.login-form .error {
+    font-size: .7rem;
+    margin: 0;
+}
+
+.qr .error {
+    font-size: .7rem;
+    margin: 0;
 }

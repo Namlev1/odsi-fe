@@ -37,7 +37,7 @@ const Registration = () => {
       setAuthToken(response.data.token)
       navigate('/')
     } catch (e) {
-      setErrorMessage(e.response.data.message)
+      setErrorMessage(e.response.data)
     }
   }
 
@@ -50,6 +50,7 @@ const Registration = () => {
           setTfaCode={setTfaCode}
           errorMessage={errorMessage}
           handleSubmit={handleTfaCodeSubmit}
+          setErrorMessage={setErrorMessage}
         />
       ) : (
         <RegistrationForm

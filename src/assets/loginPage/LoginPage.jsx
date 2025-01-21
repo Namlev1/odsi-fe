@@ -11,6 +11,8 @@ const LoginPage = () => {
   const [tfaCode, setTfaCode] = useState('')
   const [showTfa, setShowTfa] = useState(false)
   const [error, setError] = useState(false)
+  const [nameError, setNameError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
   const navigate = useNavigate()
 
   const handleCredentialsSubmit = async (event) => {
@@ -34,22 +36,33 @@ const LoginPage = () => {
       setAuthToken(response.data.token)
       navigate('/')
     } catch (e) {
-      setError(e.response.data.message)
+      setError(e.response.data)
     }
   }
 
   const handleUsernameChange = (e) => {
-    setUsername(e.target.value)
+    const newUsername = e.target.value
+    setUsername(newUsername)
+
+    if (newUsername.length < 4 || newUsername.length > 20) {
+      setNameError(true)
+    } else {
+      setNameError(false)
+    }
+    
     setError(false)
   }
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value)
-    setError(false)
-  }
+    const newPassword = e.target.value
+    setPassword(newPassword)
 
-  const handleTfaCodeChange = (e) => {
-    setTfaCode(e.target.value)
+    if (newPassword.length < 8 || newPassword.length > 32) {
+      setPasswordError(true)
+    } else {
+      setPasswordError(false)
+    }
+
     setError(false)
   }
 
@@ -59,8 +72,9 @@ const LoginPage = () => {
         <TfaForm
           handleSubmit={handleTfaCodeSubmit}
           tfaCode={tfaCode}
-          handleTfaCodeChange={handleTfaCodeChange}
+          setTfaCode={setTfaCode}
           error={error}
+          setError={setError}
         />
       ) : (
         <LoginForm
@@ -70,6 +84,8 @@ const LoginPage = () => {
           password={password}
           handlePasswordChange={handlePasswordChange}
           error={error}
+          nameError={nameError}
+          passwordError={passwordError}
         />
       )}
     </>
