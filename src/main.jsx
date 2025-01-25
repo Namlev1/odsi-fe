@@ -11,6 +11,7 @@ import Profile from './assets/Profile/Profile.jsx'
 import Post from './assets/Post.jsx'
 import User from './user/User.jsx'
 import ChangePassword from './assets/ChangePassword.jsx'
+import ResetPassword from './assets/resetPassword/ResetPassword.jsx'
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: '/register',
     element: <Registration />
+  },
+  {
+    path: '/reset',
+    element: <ResetPassword />
   },
   {
     path: '/create',

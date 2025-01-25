@@ -13,7 +13,7 @@ const TfaForm = ({ handleSubmit, tfaCode, setTfaCode, error, setError }) => {
     }
     setError('')
   }
-  
+
   return (
     <>
       <h1>Enter 6 digit code from your Authenticator mobile app.</h1>

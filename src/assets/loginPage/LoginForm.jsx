@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const LoginForm = ({
                      handleSubmit,
@@ -39,6 +39,7 @@ const LoginForm = ({
             Password must be 8-32 characters long.
           </p>
         </div>
+        <Link to={'/reset'}>Forgot password.</Link>
         <button type="submit" disabled={nameError || passwordError}>Log in</button>
         <button type="button" onClick={() => navigate('/register')}>Or register
         </button>
