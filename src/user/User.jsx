@@ -61,7 +61,6 @@ const User = () => {
       </div>
     )
   }
-  console.log(user)
 
   return <>
     <Header />

@@ -10,7 +10,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
   const [tfaCode, setTfaCode] = useState('')
   const [showTfa, setShowTfa] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError] = useState('')
   const [nameError, setNameError] = useState(false)
   const [passwordError, setPasswordError] = useState(false)
   const navigate = useNavigate()
@@ -21,7 +21,7 @@ const LoginPage = () => {
       const response = await request('POST', '/login', { username, password })
       setShowTfa(true)
     } catch (e) {
-      setError(true)
+      setError(e.response.data)
     }
   }
 

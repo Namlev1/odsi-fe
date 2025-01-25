@@ -3,14 +3,17 @@ import { useState } from 'react'
 const RegistrationForm = ({
                             handleSubmit,
                             setUsername,
+                            setEmail,
                             setErrorMessage,
                             setPassword,
                             errorMessage,
                             username,
-                            password
+                            password,
+                            email
                           }) => {
   const [nameError, setNameError] = useState(false)
   const [passwordError, setPasswordError] = useState(false)
+  const [emailError, setEmailError] = useState(false)
 
   const handleUsernameChange = (e) => {
     const newUsername = e.target.value
@@ -60,6 +63,26 @@ const RegistrationForm = ({
     setErrorMessage('')
   }
 
+  const isEmailValid = (email) => {
+    const emailRegex = /^[a-zA-Z0-9_+&*-]+(?:\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$/
+
+    // Check if the email is not empty and matches the regex pattern
+    return email && emailRegex.test(email)
+  }
+
+  const handleEmailChange = (e) => {
+    const newEmail = e.target.value
+    setEmail(newEmail)
+
+    if (!isEmailValid(newEmail)) {
+      setEmailError(true)
+    } else {
+      setEmailError(false)
+    }
+    
+    setErrorMessage('')
+  }
+
   return (
     <>
       <h1>Please register</h1>
@@ -88,7 +111,19 @@ const RegistrationForm = ({
             Invalid password: must be 8-32 characters, include uppercase, lowercase, digit, special character
           </p>
         </div>
-        <button type="submit" disabled={nameError || passwordError}>Register</button>
+        <div>
+          <input
+            type="text"
+            name="email"
+            placeholder="Email"
+            value={email}
+            onChange={handleEmailChange}
+          />
+          <p className={'error' + (emailError ? '' : ' hidden')}>
+            Invalid email format
+          </p>
+        </div>
+        <button type="submit" disabled={nameError || passwordError || emailError}>Register</button>
       </form>
       {errorMessage && <p className="error">{errorMessage}</p>}
     </>

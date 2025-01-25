@@ -6,6 +6,7 @@ import QrForm from './QrForm.jsx'
 
 const Registration = () => {
   const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [tfaCode, setTfaCode] = useState('')
   const [qrUrl, setQrUrl] = useState('')
@@ -17,7 +18,8 @@ const Registration = () => {
     try {
       const response = await request('POST', '/api/registration', {
         username,
-        password
+        password,
+        email
       })
       setQrUrl(response.data.qrUrl)
       setErrorMessage('')
@@ -32,6 +34,7 @@ const Registration = () => {
       const response = await request('POST', '/login', {
         username,
         password,
+        email,
         tfaCode
       })
       setAuthToken(response.data.token)
@@ -61,6 +64,8 @@ const Registration = () => {
           errorMessage={errorMessage}
           username={username}
           password={password}
+          email={email}
+          setEmail={setEmail}
         />
       )}
     </>

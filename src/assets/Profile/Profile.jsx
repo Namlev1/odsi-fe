@@ -49,8 +49,7 @@ const Profile = () => {
       )
       window.location.reload()
     } catch (e) {
-      console.log('Error during key update')
-      console.log(e)
+      setError(e.response.data)
     }
   }
 
@@ -61,7 +60,6 @@ const Profile = () => {
         setPubKey(response.data)
       } catch (e) {
         setError('Failed to fetch public key')
-        console.error('Error:', e)
       }
     }
     const fetchPosts = async () => {
@@ -73,7 +71,6 @@ const Profile = () => {
         setPosts(response.data)
       } catch (e) {
         setError('Failed to fetch posts')
-        console.error('Error: ', e)
       }
     }
 
@@ -100,6 +97,7 @@ const Profile = () => {
             <input type="file" accept=".pem,.key" onChange={handleFileChange} />
             {newPubKey && <p>Public key loaded.</p>}
             <button onClick={handleUpdateKey}>Send</button>
+            {error && <p className={'error'}>{error}</p>}
           </div>
         }
         <h2>Posts:</h2>

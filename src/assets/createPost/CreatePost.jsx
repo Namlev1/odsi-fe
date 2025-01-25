@@ -37,7 +37,6 @@ const CreatePost = () => {
   }
 
   const handleValueChange = (e) => {
-    console.log(e)
     const newValue = e
     setEditorValue(newValue)
     if (newValue.length < 1 || newValue.length >= 5000) {
@@ -57,10 +56,16 @@ const CreatePost = () => {
     return Uint8Array.from(atob(base64), c => c.charCodeAt(0))
   }
 
-  // Generate the signature using the private key
+  const normalizeContent = (content) => {
+    return content
+      .replace(/\s+/g, ' ') // Replace multiple spaces with a single space
+      .replace(/>\s+</g, '><') // Remove spaces between tags
+      .trim() // Trim leading and trailing spaces
+  }
   const signContent = async (content, key) => {
+    const normalizedContent = normalizeContent(content) // Normalize content
     const encoder = new TextEncoder()
-    const encodedContent = encoder.encode(content)
+    const encodedContent = encoder.encode(normalizedContent)
     const binaryKey = convertPEMToBinary(key)
 
     const importedKey = await window.crypto.subtle.importKey(
@@ -72,11 +77,11 @@ const CreatePost = () => {
       },
       false,
       ['sign']
-    )
+    );
     return window.crypto.subtle.sign('RSASSA-PKCS1-v1_5', importedKey, encodedContent)
-      .then(signature => Buffer.from(new Uint8Array(signature)).toString('base64'))
-  }
-
+      .then(signature => Buffer.from(new Uint8Array(signature)).toString('base64'));
+  };
+  
   const onPostSubmit = async () => {
     try {
       let signature = null

@@ -43,7 +43,7 @@ const LoginForm = ({
         <button type="button" onClick={() => navigate('/register')}>Or register
         </button>
       </form>
-      {error && <p className="error">Invalid credentials</p>}
+      {error && <p className="error">{error}</p>}
     </>
   )
 }
