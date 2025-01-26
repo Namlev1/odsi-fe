@@ -2,6 +2,7 @@ import Header from './header/Header.jsx'
 import { useState } from 'react'
 import { request } from '../api/axios_helper.js'
 import { useNavigate } from 'react-router-dom'
+import TfaForm from './loginPage/TfaForm.jsx'
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState('')
@@ -11,9 +12,32 @@ const ChangePassword = () => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false)
   const [responseError, setResponseError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [showTfa, setShowTfa] = useState(false)
+  const [tfaCode, setTfaCode] = useState(null)
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
+  const handleCredentialsSubmit = async (event) => {
+    event.preventDefault()
+    try {
+      const response = await request(
+        'POST',
+        '/api/v1/change-pass',
+        {
+          oldPassword: oldPassword,
+          newPassword: newPassword,
+          confirmPassword: confirmPassword,
+          tfaCode: tfaCode
+        }
+      )
+      setShowTfa(true)
+    } catch (e) {
+      console.log(e)
+      setResponseError(e.response.data)
+    }
+  }
+
+
+  const handleTfaCodeSubmit = async (e) => {
     e.preventDefault()
     try {
       const response = await request(
@@ -22,7 +46,8 @@ const ChangePassword = () => {
         {
           oldPassword: oldPassword,
           newPassword: newPassword,
-          confirmPassword: confirmPassword
+          confirmPassword: confirmPassword,
+          tfaCode: tfaCode
         }
       )
       if (response.status === 200) {
@@ -33,6 +58,7 @@ const ChangePassword = () => {
         }, 2000)
       }
     } catch (e) {
+      console.log(e)
       setResponseError(e.response.data)
     }
   }
@@ -78,30 +104,46 @@ const ChangePassword = () => {
   }
 
   return <>
-    <Header />
-    <div>
-      <h1>Change password</h1>
-      <form onSubmit={handleSubmit} className={'login-form change-password'}>
-        <input type="password" placeholder={'Password'} value={oldPassword}
-               onChange={(e) => setOldPassword(e.target.value)} />
+    {showTfa ? (<>
+        <TfaForm
+          handleSubmit={handleTfaCodeSubmit}
+          tfaCode={tfaCode}
+          setTfaCode={setTfaCode}
+          error={responseError}
+          setError={setResponseError}
+        />
+        {success && <p>Password changed successfully</p>}
+      </>
+    ) : (
+      <>
+        <Header />
         <div>
-          <input type="password" placeholder={'New password'} value={newPassword} onChange={handleNewPasswordChange} />
-          <p className={'error' + (newPasswordError ? '' : ' hidden')}>
-            Invalid password: must be 8-32 characters, include uppercase, lowercase, digit, special character.
-          </p>
+          <h1>Change password</h1>
+          <form onSubmit={handleCredentialsSubmit} className={'login-form change-password'}>
+            <input type="password" placeholder={'Password'} value={oldPassword}
+                   onChange={(e) => setOldPassword(e.target.value)} />
+            <div>
+              <input type="password" placeholder={'New password'} value={newPassword}
+                     onChange={handleNewPasswordChange} />
+              <p className={'error' + (newPasswordError ? '' : ' hidden')}>
+                Invalid password: must be 8-32 characters, include uppercase, lowercase, digit, special character.
+              </p>
+            </div>
+            <div>
+              <input type="password" placeholder={'Confirm password'} value={confirmPassword}
+                     onChange={handleConfirmPasswordChange} />
+              <p className={'error' + (confirmPasswordError ? '' : ' hidden')}>
+                Passwords do not match.
+              </p>
+            </div>
+            <button type={'submit'} disabled={newPasswordError || confirmPasswordError}>Change password</button>
+          </form>
+          {
+            responseError && <p className="error">{responseError}</p>
+          }
         </div>
-        <div>
-          <input type="password" placeholder={'Confirm password'} value={confirmPassword}
-                 onChange={handleConfirmPasswordChange} />
-          <p className={'error' + (confirmPasswordError ? '' : ' hidden')}>
-            Passwords do not match.
-          </p>
-        </div>
-        <button type={'submit'} disabled={newPasswordError || confirmPasswordError}>Change password</button>
-      </form>
-      {responseError && <p className="error">{responseError}</p>}
-      {success && <p>Password changed successfully</p>}
-    </div>
+      </>
+    )}
   </>
 }
 
